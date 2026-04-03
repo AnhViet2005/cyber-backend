@@ -1,0 +1,10 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\ConnectDB",
+    "\\ConnectDB\\Migrations",
+    "\\ConnectDB\\Models"
+  ],
+  "SelectedNode": "\\ConnectDB\\Models\\Service.cs",
+  "PreviewInSolutionExplorer": false
+}

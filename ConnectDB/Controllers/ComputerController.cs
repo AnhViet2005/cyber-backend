@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using ConnectDB.Data;
 using ConnectDB.Models;
 using Microsoft.EntityFrameworkCore;
@@ -41,7 +41,6 @@ namespace ConnectDB.Controllers
             return Ok(computer);
         }
 
-        // POST: api/computer
         [HttpPost]
         public async Task<IActionResult> Create(Computer computer)
         {
@@ -50,13 +49,15 @@ namespace ConnectDB.Controllers
             if (!roomExists)
                 return BadRequest("Room không tồn tại");
 
+            // Ignore navigation property object to prevent EF from inserting it
+            computer.Room = null;
+
             _context.Computers.Add(computer);
             await _context.SaveChangesAsync();
 
             return Ok(computer);
         }
 
-        // PUT: api/computer/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, Computer computer)
         {
@@ -67,6 +68,9 @@ namespace ConnectDB.Controllers
             var roomExists = await _context.Rooms.AnyAsync(r => r.RoomId == computer.RoomId);
             if (!roomExists)
                 return BadRequest("Room không tồn tại");
+
+            // Ignore navigation property object
+            computer.Room = null;
 
             _context.Entry(computer).State = EntityState.Modified;
 
