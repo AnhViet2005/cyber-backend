@@ -11,9 +11,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    // 👉 Sử dụng PostgreSQL (đã chuyển sang Npgsql)
-    var pgConnection = builder.Configuration.GetConnectionString("PostgreSqlConnection");
-    options.UseNpgsql(pgConnection);
+    var connectionString = builder.Configuration.GetConnectionString("PostgreSqlConnection");
+    
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new Exception("LỖI: Không tìm thấy chuỗi kết nối 'ConnectionStrings__PostgreSqlConnection' trong Environment Variables của Render!");
+    }
+
+    // Nếu là định dạng postgres:// (thường thấy trên Render)
+    if (connectionString.StartsWith("postgres://"))
+    {
+        var databaseUri = new Uri(connectionString);
+        var userInfo = databaseUri.UserInfo.Split(':');
+        connectionString = $"Host={databaseUri.Host};Port={databaseUri.Port};Database={databaseUri.LocalPath.Substring(1)};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
+    }
+    
+    options.UseNpgsql(connectionString);
 });
 
 builder.Services.AddControllers()
