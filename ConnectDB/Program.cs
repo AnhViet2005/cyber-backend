@@ -18,8 +18,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         throw new Exception("LỖI: Không tìm thấy chuỗi kết nối 'ConnectionStrings__PostgreSqlConnection' trong Environment Variables của Render!");
     }
 
-    // Nếu là định dạng postgres:// (thường thấy trên Render)
-    if (connectionString.StartsWith("postgres://"))
+    // Nếu là định dạng postgres:// hoặc postgresql:// (thường thấy trên Render)
+    if (connectionString.StartsWith("postgres://") || connectionString.StartsWith("postgresql://"))
     {
         var databaseUri = new Uri(connectionString);
         var userInfo = databaseUri.UserInfo.Split(':');
