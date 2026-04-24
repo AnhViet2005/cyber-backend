@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -9,11 +9,12 @@ namespace ConnectDB.Models
         [Key]
         public int RoomId { get; set; }
 
-        public string? Name { get; set; }   // 👈 nên nullable
+        public string? Name { get; set; }
+        public string? Type { get; set; }
+        public decimal PricePerHour { get; set; }
+        public string? ImageUrl { get; set; }
 
-        public string? Type { get; set; }   // 👈 nên nullable
-
-        [JsonIgnore] // 👈 tránh vòng lặp JSON
+        [JsonIgnore]
         public ICollection<Computer>? Computers { get; set; } // 👈 QUAN TRỌNG: thêm ?
     }
 }

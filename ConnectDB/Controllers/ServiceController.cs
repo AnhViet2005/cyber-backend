@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using ConnectDB.Data;
 using ConnectDB.Models;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +20,9 @@ namespace ConnectDB.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var services = await _context.Services.ToListAsync();
+            var services = await _context.Services
+                                         .Include(s => s.AreaPrices)
+                                         .ToListAsync();
             return Ok(services);
         }
 

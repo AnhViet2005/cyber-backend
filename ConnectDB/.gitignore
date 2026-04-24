@@ -1,0 +1,19 @@
+## .gitignore for ASP.NET Core
+
+# Build & publish output
+bin/
+obj/
+OutPublish/
+*.zip
+
+# User settings
+*.user
+*.suo
+.vs/
+
+# Secrets
+appsettings.Development.json
+
+# OS files
+.DS_Store
+Thumbs.db

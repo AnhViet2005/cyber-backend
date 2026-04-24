@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using ConnectDB.Data;
 using ConnectDB.Models;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +22,13 @@ namespace ConnectDB.Controllers
         {
             var data = await _context.OrderDetails
                                      .Include(o => o.Order)
+                                        .ThenInclude(o => o.Session)
+                                            .ThenInclude(s => s.Customer)
+                                     .Include(o => o.Order)
+                                        .ThenInclude(o => o.Session)
+                                            .ThenInclude(s => s.Computer)
                                      .Include(o => o.Service)
+                                     .OrderByDescending(o => o.Order.OrderTime)
                                      .ToListAsync();
 
             return Ok(data);

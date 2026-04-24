@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using ConnectDB.Data;
 using ConnectDB.Models;
 using Microsoft.EntityFrameworkCore;
@@ -56,7 +56,7 @@ namespace ConnectDB.Controllers
             decimal hourlyRate = 5000;
 
             var endTime = session.EndTime ?? DateTime.Now;
-            var totalHours = (decimal)(endTime - session.StartTime).TotalHours;
+            var totalHours = (decimal)(endTime - (session.StartTime ?? endTime)).TotalHours;
             var sessionCost = Math.Ceiling(totalHours) * hourlyRate;
 
             // 🔥 TÍNH TIỀN ORDER
