@@ -13,9 +13,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("PostgreSqlConnection");
     
-    if (string.IsNullOrEmpty(connectionString))
+    if (string.IsNullOrEmpty(connectionString) || connectionString.Contains("localhost") || connectionString.Contains("127.0.0.1"))
     {
-        throw new Exception("LỖI: Không tìm thấy chuỗi kết nối 'ConnectionStrings__PostgreSqlConnection' trong Environment Variables của Render!");
+        throw new Exception("LỖI NGHIÊM TRỌNG: Backend đang dùng localhost! Render chưa nhận được biến 'ConnectionStrings__PostgreSqlConnection'. Hãy kiểm tra lại tab Environment của Web Service!");
     }
 
     // Nếu là định dạng postgres:// hoặc postgresql:// (thường thấy trên Render)
