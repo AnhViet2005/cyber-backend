@@ -77,7 +77,10 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate(); 
+    await db.Database.MigrateAsync(); 
+    
+    // 🚀 Seed initial data
+    await DbSeeder.SeedAsync(db);
     
     // 🚀 Tự động nạp tồn kho 100 cho tất cả món (trừ Giờ chơi, Combo, Gói giờ) đang bị hết hàng
     var emptyStockServices = await db.Services.Where(s => s.StockQuantity == 0 && s.Category != "Time" && s.Category != "Combos" && s.Category != "Packages").ToListAsync();
