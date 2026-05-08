@@ -13,12 +13,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("PostgreSqlConnection");
     
-    if (string.IsNullOrEmpty(connectionString) || connectionString.Contains("localhost") || connectionString.Contains("127.0.0.1"))
-    {
-        throw new Exception("LỖI NGHIÊM TRỌNG: Backend đang dùng localhost! Render chưa nhận được biến 'ConnectionStrings__PostgreSqlConnection'. Hãy kiểm tra lại tab Environment của Web Service!");
-    }
-
-    // Nếu là định dạng postgres:// hoặc postgresql:// (thường thấy trên Render)
+   
     if (connectionString.StartsWith("postgres://") || connectionString.StartsWith("postgresql://"))
     {
         var databaseUri = new Uri(connectionString);
@@ -40,10 +35,17 @@ builder.Services.AddControllers()
 builder.Services.AddSignalR();
 
 // 🟢 Cấu hình CORS
+var allowedOrigins = builder.Configuration["ALLOWED_ORIGINS"]?.Split(',') ?? new[] { 
+    "http://localhost:3000", 
+    "http://localhost:3001",
+    "https://frontend-cyan-chi-41.vercel.app",
+    "https://frontend-user-zeta-seven.vercel.app"
+};
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowNextApp",
-        policy => policy.WithOrigins("http://localhost:3000", "http://localhost:3001") // Hỗ trợ cả 2 web
+        policy => policy.WithOrigins(allowedOrigins)
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials());
@@ -55,7 +57,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // 🔐 Cấu hình JWT
-var jwtKey = "PhimSecNhatBanVip12345678901234567890"; // Secret key (nên để trong appsettings.json)
+var jwtKey = "PhimSecNhatBanVip12345678901234567890"; 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
